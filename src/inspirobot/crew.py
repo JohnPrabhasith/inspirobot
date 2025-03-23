@@ -83,6 +83,7 @@ class YoutubeIdeaGeneratorCrew:
     def crew(self) -> Crew:
         """Creates the YoutubeIdeaGenerator crew"""
         return Crew(
+            manager_llm="groq/llama-3.1-8b-instant",
             agents=self.agents,  # Automatically created by the @agent decorator
             tasks=self.tasks,  # Automatically created by the @task decorator
             process=Process.sequential,
