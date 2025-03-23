@@ -1,12 +1,18 @@
 from typing import List
+import os
 
-from crewai import Agent, Crew, Process, Task
+from crewai import LLM, Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from pydantic import BaseModel
 
 from src.inspirobot.tools.SearchYoutubeTool import (
     YoutubeVideoSearchAndDetailsTool,
 )
+
+my_llm = LLM(
+    api_key=os.getenv("GROQ_API_KEY"),
+    model="groq/llama-3.1-8b-instant",
+),
 
 
 class ResearchItem(BaseModel):
@@ -39,20 +45,21 @@ class YoutubeIdeaGeneratorCrew:
     @agent
     def video_idea_generator_agent(self) -> Agent:
         return Agent(
-            config=self.agents_config["video_idea_generator_agent"], verbose=True
+            config=self.agents_config["video_idea_generator_agent"], llm=my_llm, verbose=True
         )
 
     @agent
     def research_agent(self) -> Agent:
         return Agent(
             config=self.agents_config["research_agent"],
+            llm=my_llm,
             tools=[YoutubeVideoSearchAndDetailsTool()],
             verbose=True,
         )
 
     @agent
     def scoring_agent(self) -> Agent:
-        return Agent(config=self.agents_config["scoring_agent"], verbose=True)
+        return Agent(config=self.agents_config["scoring_agent"],llm=my_llm, verbose=True)
 
     @task
     def filter_comments_task(self) -> Task:
@@ -83,7 +90,7 @@ class YoutubeIdeaGeneratorCrew:
     def crew(self) -> Crew:
         """Creates the YoutubeIdeaGenerator crew"""
         return Crew(
-            manager_llm="groq/llama-3.1-8b-instant",
+            manager_llm=my_llm,
             agents=self.agents,  # Automatically created by the @agent decorator
             tasks=self.tasks,  # Automatically created by the @task decorator
             process=Process.sequential,
