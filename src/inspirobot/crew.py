@@ -40,7 +40,7 @@ class YoutubeIdeaGeneratorCrew:
 
     @agent
     def comment_filter_agent(self) -> Agent:
-        return Agent(config=self.agents_config["comment_filter_agent"], verbose=True)
+        return Agent(config=self.agents_config["comment_filter_agent"],llm=my_llm, verbose=True)
 
     @agent
     def video_idea_generator_agent(self) -> Agent:
@@ -59,7 +59,7 @@ class YoutubeIdeaGeneratorCrew:
 
     @agent
     def scoring_agent(self) -> Agent:
-        return Agent(config=self.agents_config["scoring_agent"],llm=my_llm, verbose=True)
+        return Agent(config=self.agents_config["scoring_agent"], llm=my_llm, verbose=True)
 
     @task
     def filter_comments_task(self) -> Task:
