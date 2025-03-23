@@ -1,0 +1,23 @@
+[project]
+name = "inspirobot"
+version = "0.1.0"
+description = "InspiroBot using crewAI"
+authors = [{ name = "B Lalith Prabhasith", email = "prabhasith0708@gmail.com" }]
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "crewai[tools]>=0.108.0,<1.0.0"
+]
+
+[project.scripts]
+inspirobot = "inspirobot.main:run"
+run_crew = "inspirobot.main:run"
+train = "inspirobot.main:train"
+replay = "inspirobot.main:replay"
+test = "inspirobot.main:test"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"
