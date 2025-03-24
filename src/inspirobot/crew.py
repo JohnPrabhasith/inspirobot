@@ -9,10 +9,10 @@ from src.inspirobot.tools.SearchYoutubeTool import (
     YoutubeVideoSearchAndDetailsTool,
 )
 
-my_llm = LLM(
-    api_key=os.getenv("GROQ_API_KEY"),
-    model="groq/llama-3.1-8b-instant",
-),
+# my_llm = LLM(
+#     model="llama-3.1-8b-instant",
+#     temperature=0.7
+# )
 
 
 class ResearchItem(BaseModel):
@@ -40,26 +40,26 @@ class YoutubeIdeaGeneratorCrew:
 
     @agent
     def comment_filter_agent(self) -> Agent:
-        return Agent(config=self.agents_config["comment_filter_agent"],llm=my_llm, verbose=True)
+        return Agent(config=self.agents_config["comment_filter_agent"], verbose=True)
 
     @agent
     def video_idea_generator_agent(self) -> Agent:
         return Agent(
-            config=self.agents_config["video_idea_generator_agent"], llm=my_llm, verbose=True
+            config=self.agents_config["video_idea_generator_agent"],  verbose=True
         )
 
     @agent
     def research_agent(self) -> Agent:
         return Agent(
             config=self.agents_config["research_agent"],
-            llm=my_llm,
+            
             tools=[YoutubeVideoSearchAndDetailsTool()],
             verbose=True,
         )
 
     @agent
     def scoring_agent(self) -> Agent:
-        return Agent(config=self.agents_config["scoring_agent"], llm=my_llm, verbose=True)
+        return Agent(config=self.agents_config["scoring_agent"],  verbose=True)
 
     @task
     def filter_comments_task(self) -> Task:
@@ -83,6 +83,7 @@ class YoutubeIdeaGeneratorCrew:
     def score_video_ideas_task(self) -> Task:
         return Task(
             config=self.tasks_config["score_video_ideas_task"],
+            
             output_pydantic=VideoIdeasList,
         )
 
@@ -90,10 +91,10 @@ class YoutubeIdeaGeneratorCrew:
     def crew(self) -> Crew:
         """Creates the YoutubeIdeaGenerator crew"""
         return Crew(
-            manager_llm=my_llm,
             agents=self.agents,  # Automatically created by the @agent decorator
             tasks=self.tasks,  # Automatically created by the @task decorator
             process=Process.sequential,
             verbose=True,
+            
             # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
         )

@@ -22,7 +22,8 @@ class VideoDetails(BaseModel):
 
 class YoutubeVideoSearchAndDetailsToolInput(BaseModel):
     keyword: str = Field(..., description="The search keyword.")
-    max_results: int = Field(3, description="The maximum number of results to return.")
+    max_results: int = Field(
+        3, description="The maximum number of results to return.")
 
 
 class YoutubeVideoSearchAndDetailsTool(BaseTool):
@@ -35,7 +36,8 @@ class YoutubeVideoSearchAndDetailsTool(BaseTool):
 
     def fetch_video_details_sync(self, video_id: str) -> VideoDetails:
         url = "https://www.googleapis.com/youtube/v3/videos"
-        params = {"part": "snippet,statistics", "id": video_id, "key": self.api_key}
+        params = {"part": "snippet,statistics",
+                  "id": video_id, "key": self.api_key}
         response = requests.get(url, params=params)
         response.raise_for_status()
 
